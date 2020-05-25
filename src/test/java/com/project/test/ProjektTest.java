@@ -68,8 +68,10 @@ public class ProjektTest {
       entityManager.persist(projekt);
       entityManager.getTransaction().commit(); 
  
-      entityManager.refresh(projekt); 	//odświeżenie stanu zarządzanej encji          
-      									//na podstawie informacji z bazy danych 
+      entityManager.refresh(projekt); 	
+      //odświeżenie stanu zarządzanej encji          
+      									
+      //na podstawie informacji z bazy danych 
       //sprawdzamy czy w bazie danych do projektu zostały przypisane zadania       
       List<Zadanie> zadania = projekt.getZadania(); 
  
@@ -84,7 +86,12 @@ public class ProjektTest {
    @Test
    @Order(2)
    public void usuwanieProjektuZZadaniami() {
-	   // TODO       // Pamiętaj, że dane w powiązanych tabelach naszego modelu nie będą         // automatycznie modyfikowane (ON DELETE NO ACTION, ON UPDATE NO ACTION).        // Przy każdej próbie usuwania, czy modyfikacji projektu, do którego są        // odwołania przez wartości kluczy obcych, zawsze generowany będzie błąd,         // a polecenie DELETE lub UPDATE wycofywane.        // Należy zatem zacząć od usuwania zadań.    } 
+	   // TODO       // Pamiętaj, że dane w powiązanych tabelach naszego modelu nie będą         
+	   // automatycznie modyfikowane (ON DELETE NO ACTION, ON UPDATE NO ACTION).        
+	   // Przy każdej próbie usuwania, czy modyfikacji projektu, do którego są        
+	   // odwołania przez wartości kluczy obcych, zawsze generowany będzie błąd,         
+	   // a polecenie DELETE lub UPDATE wycofywane.        
+	   // Należy zatem zacząć od usuwania zadań.    } 
    }
  
    @Test
@@ -96,8 +103,14 @@ public class ProjektTest {
    @Test
    @Order(4)
    public void wyszukiwanieProjektuZeStudentamiIZadaniemTomcat() {
-	   // TODO       // Pobierz projekty, do których zostało przypisanych co najmniej dwóch studentów         // i które maja w nazwie lub opisie jakiegokolwiek zadania słowo 'Tomcat'.    }        @BeforeEach    public void before(TestInfo testInfo) {       System.out.printf("-- METODA -> %s%n", testInfo.getTestMethod().get().getName());    } 
-   }
+	   // TODO       
+	   // Pobierz projekty, do których zostało przypisanych co najmniej dwóch studentów         
+	   // i które maja w nazwie lub opisie jakiegokolwiek zadania słowo 'Tomcat'.    
+	   }        
+	   @BeforeEach    public void before(TestInfo testInfo) {       
+		   System.out.printf("-- METODA -> %s%n", testInfo.getTestMethod().get().getName());    
+		   } 
+   
  
    @AfterEach
    public void after(TestInfo testInfo) {

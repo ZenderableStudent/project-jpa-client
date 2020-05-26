@@ -29,10 +29,10 @@ public class Projekt {
 	@Column(name="opis", length = 1000)
 	private String opis;
 	@CreationTimestamp
-	@Column(name="dataczas_utworzenia",nullable = false,updatable = false)
+	@Column(name="DATA_CZAS_UTWORZENIA",nullable = false)
 	private LocalDateTime dataCzasUtworzenia;
 	@UpdateTimestamp
-	@Column(name="dataczas_modyfikacji", nullable = false)
+	@Column(name="DATA_ODDANIA", nullable = false)
 	private LocalDate dataOddania;
 	@OneToMany(mappedBy="projekt")
 	private List<Zadanie> zadania;

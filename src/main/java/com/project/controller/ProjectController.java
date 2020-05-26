@@ -46,12 +46,12 @@ import javafx.util.StringConverter;
 public class ProjectController {
 	private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-	// Zmienne do obs³ugi stronicowania i wyszukiwania
+
 	private String search4;
 	private Integer pageNo;
 	private Integer pageSize;
 
-	// Automatycznie wstrzykiwane komponenty GUI
+
 	@FXML
 	private ChoiceBox<Integer> cbPageSizes;
 	@FXML
@@ -132,9 +132,9 @@ public class ProjectController {
 				setGraphic(empty ? null : pane);
 			}
 		});
-		// Dodanie kolumny do tabeli
+		
 		tblProjekt.getColumns().add(colEdit);
-		// Ustawienie wzglêdnej szerokoœci poszczególnych kolumn
+		
 		colId.setMaxWidth(5000);
 		colNazwa.setMaxWidth(10000);
 		colOpis.setMaxWidth(10000);
@@ -143,12 +143,12 @@ public class ProjectController {
 		colEdit.setMaxWidth(7000);
 
 		projekty = FXCollections.observableArrayList();
-		// Powi¹zanie tabeli z list¹ typu ObservableList przechowuj¹c¹ projekty
+		
 		tblProjekt.setItems(projekty);
 		projektDAO = new ProjektDAOImpl();
-		wykonawca = Executors.newFixedThreadPool(1);// W naszej aplikacji wystarczy jeden w¹tek do pobierania
-		loadPage(search4, pageNo, pageSize); // danych. Przekazanie wiêkszej iloœci takich zadañ do
-												// puli jednow¹tkowej powoduje ich kolejkowanie i sukcesywne wykonywanie
+		wykonawca = Executors.newFixedThreadPool(1);
+		loadPage(search4, pageNo, pageSize); 
+												
 
 		colDataCzasUtworzenia.setCellFactory(column -> new TableCell<Projekt, LocalDateTime>() {
 			@Override
@@ -208,10 +208,7 @@ public class ProjectController {
 	}
 
 	public void shutdown() {
-		// Wystarczy³oby tylko samo wywo³anie metody wykonawca.shutdownNow(), ale mo¿na
-		// równie¿, tak jak poni¿ej,
-		// zaimplementowaæ wersjê z oczekiwaniem na zakoñczenie wszystkich zadañ
-		// wykonywanych w puli w¹tków.
+		
 		if (wykonawca != null) {
 			wykonawca.shutdown();
 			try {

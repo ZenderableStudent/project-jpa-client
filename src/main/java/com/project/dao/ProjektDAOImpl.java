@@ -61,7 +61,7 @@ return projekty;
 public List<Projekt> searchByNazwa(String search4, Integer offset, Integer limit) {
 	Projekt projekt = null;
     EntityManager entityManager = JPAUtil.getEntityManager();
-    TypedQuery<Projekt> query = entityManager.createQuery("SELECT p FROM Projekt p ORDER BY p.dataCzasUtworzenia DESC WHERE p.nazwa = " + search4, Projekt.class);
+    TypedQuery<Projekt> query = entityManager.createQuery("SELECT p FROM Projekt p WHERE p.nazwa = " + search4, Projekt.class);
              query.setFirstResult(offset);
              query.setMaxResults(limit);
              List<Projekt> projekty = query.getResultList();

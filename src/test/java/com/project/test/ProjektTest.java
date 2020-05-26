@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -86,26 +88,83 @@ public class ProjektTest {
    @Test
    @Order(2)
    public void usuwanieProjektuZZadaniami() {
-	   // TODO       // Pamiętaj, że dane w powiązanych tabelach naszego modelu nie będą         
-	   // automatycznie modyfikowane (ON DELETE NO ACTION, ON UPDATE NO ACTION).        
-	   // Przy każdej próbie usuwania, czy modyfikacji projektu, do którego są        
-	   // odwołania przez wartości kluczy obcych, zawsze generowany będzie błąd,         
-	   // a polecenie DELETE lub UPDATE wycofywane.        
-	   // Należy zatem zacząć od usuwania zadań.    } 
+	  entityManager.getTransaction().begin();
+	  Projekt projekt;
+	  projekt = entityManager.find(Projekt.class, 1);
+	  List<Zadanie> zadania = projekt.getZadania();
+	  assertNotNull(zadania);
+	  assertEquals(2, zadania.size());
+	  for(Zadanie zad : zadania) {
+		  entityManager.remove(zadania);
+	  }
+	  entityManager.remove(projekt);
+	  entityManager.getTransaction().commit();
+	  entityManager.close();
    }
  
+
    @Test
    @Order(3)
    public void dodawanieProjektuZeStudentamiIZadaniami() {
-	   // TODO 
-   }
+       Projekt projekt = new Projekt("Aplikacji webowa", "Aplikacja w Javie", LocalDate.of(2020, 6, 19));
+         
+          Zadanie zadanie1 = new Zadanie("Instalacja kontenera serwletów",1, "Instalacja serwera Tomcat 9.0.33");
+          Zadanie zadanie2 = new Zadanie("Implementacja aplikacji",2, "Zgodna z wzorcem MVC");
+          Student student1 = new Student("Andrzej","Petarda","66666","email@email.com",true);
+          Student student2 = new Student("Mike","Smith","67890","mike@smith.com",true);
+          //przypisujemy do zadań projekt      
+          zadanie1.setProjekt(projekt);      
+          zadanie2.setProjekt(projekt);
+          Set<Projekt> projekty1 = student1.getProjekty();
+          projekty1.add(projekt);
+          Set<Projekt> projekty2 = student2.getProjekty();
+          projekty2.add(projekt);
+          student1.setProjekty(projekty1);
+          student2.setProjekty(projekty2);
+         
+          entityManager.getTransaction().begin();
+          entityManager.persist(zadanie1);      
+          entityManager.persist(zadanie2);
+          entityManager.persist(student1);
+          entityManager.persist(student2);
+         
+          entityManager.persist(projekt);
+          entityManager.getTransaction().commit();
+     
+          entityManager.refresh(projekt);  
+                                               
+   
+          List<Zadanie> zadania = projekt.getZadania();
+          Set<Student> studenci = projekt.getStudenci();
+         
+     
+          assertNotNull(zadania);
+          assertNotNull(studenci);
+     
+          assertEquals(2, studenci.size());
+          assertEquals(2, zadania.size());
+          System.out.printf("Projekt - Id: %d, Nazwa: %s%n", projekt.getProjektId(), projekt.getNazwa());
+          for (Zadanie zad : zadania) {
+              System.out.printf(" Zadanie - Id: %d, Nazwa: %s%n", zad.getZadanieId(), zad.getNazwa());           }
+          for (Student stu : studenci) {
+               System.out.printf("Student - Id: %d, Imie:%s%n, Nazwisko:%s%n ", stu.getStudent_id(),stu.getImie(),stu.getNazwisko()); }
+          }
  
    @Test
    @Order(4)
    public void wyszukiwanieProjektuZeStudentamiIZadaniemTomcat() {
-	   // TODO       
-	   // Pobierz projekty, do których zostało przypisanych co najmniej dwóch studentów         
-	   // i które maja w nazwie lub opisie jakiegokolwiek zadania słowo 'Tomcat'.    
+       entityManager.getTransaction().begin();
+       List<Object[]> result = entityManager.createQuery("SELECT p.nazwa, count(z.zadanieId) FROM Projekt p"
+       +"LEFT OUTER JOIN p.zadania z"
+       +"WHERE p.opis LIKE '%Tomcat%'"
+       +"GROUP BY p.nazwa HAVING count(z.zadanieID) >3",Object[].class).getResultList();
+      
+      for(Object[] object : result) {
+          String nazwa = (String) object[0];
+          Long liczbaZadan = (Long) object[1];
+          System.out.printf("Nazwa:%s%n, Liczba projektow:%d", nazwa,liczbaZadan);
+      }
+            
 	   }        
 	   @BeforeEach    public void before(TestInfo testInfo) {       
 		   System.out.printf("-- METODA -> %s%n", testInfo.getTestMethod().get().getName());    
